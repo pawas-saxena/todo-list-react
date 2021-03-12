@@ -34,6 +34,8 @@ const TaskRowRoot = styled(FlexRowDiv)`
   }
   ${TaskTitle} {
     width: 90%;
+    overflow-wrap: break-word;
+    max-width: 384px;
   }
 `;
 

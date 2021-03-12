@@ -130,6 +130,7 @@ function App() {
               toggleCompleted={toggleCompleteStatus}
               onDelete={deleteTask}
               onSave={onSave}
+              key={task.id}
             />
           ))}
         </AllTaskListContainer>
@@ -138,7 +139,7 @@ function App() {
           {taskArray
             .filter((task: TaskType) => task.isCompleted === true)
             .map((task: TaskType) => (
-              <CompletedTask taskObject={task} />
+              <CompletedTask taskObject={task} key={task.id}/>
             ))}
         </CompletedTaskContainer>
       </TodoContainer>
