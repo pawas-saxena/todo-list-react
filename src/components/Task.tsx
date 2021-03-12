@@ -45,6 +45,7 @@ const Task: React.FC<Prop> = ({
 }: Prop) => {
   const [isEditable, setIsEditable] = useState<boolean>(false);
   const [taskTitle, setTaskTitle] = useState<string>('');
+
   return (
     <TaskRowRoot>
       <input
@@ -60,12 +61,13 @@ const Task: React.FC<Prop> = ({
           <input
             type="text"
             value={taskTitle}
-            onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              setTaskTitle(event.currentTarget.value);
+            }}
+            onKeyDown={(event) => {
               if (event.key === 'Enter') {
                 onSave(taskObject.id, taskTitle);
                 setIsEditable(false);
-              } else {
-                setTaskTitle(event.currentTarget.value + event.key);
               }
             }}
           />
@@ -79,7 +81,9 @@ const Task: React.FC<Prop> = ({
         </>
       ) : (
         <>
-          <TaskTitleWithStrikeThrough isCompleted={taskObject.isCompleted}>{taskObject.title}</TaskTitleWithStrikeThrough>
+          <TaskTitleWithStrikeThrough isCompleted={taskObject.isCompleted}>
+            {taskObject.title}
+          </TaskTitleWithStrikeThrough>
           <IconButton
             onClick={() => onDelete(taskObject.id)}
             icon={<FontAwesomeIcon icon={faTimes} size="1x" />}
