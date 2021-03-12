@@ -10,8 +10,10 @@ type Prop = {
 };
 
 const ReadOnlyTaskContainer = styled.div`
-  text-decoration: ${(props: { isCompleted: boolean }) =>
-    props.isCompleted ? 'line-through' : ''};
+  p {
+    text-decoration: ${(props: { isCompleted: boolean }) =>
+      props.isCompleted ? 'line-through' : ''};
+  }
 `;
 
 const EditableTaskContainer = styled.div``;
@@ -59,7 +61,7 @@ const Task: React.FC<Prop> = ({
         </EditableTaskContainer>
       ) : (
         <ReadOnlyTaskContainer isCompleted={taskObject.isCompleted}>
-          <div>{taskObject.title}</div>
+          <p>{taskObject.title}</p>
           <div onClick={() => onDelete(taskObject.id)}>x</div>
           <div
             onClick={() => {

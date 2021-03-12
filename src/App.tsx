@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import taskData from './tasksData';
 import { TaskType } from './types';
 import { v4 as uuidv4 } from 'uuid';
+import CompletedTask from './components/CompletedTask';
 
 const IncompleteTaskContainer = styled.div``;
 const CompletedTaskContainer = styled.div``;
@@ -86,28 +87,21 @@ function App() {
       </div>
       <IncompleteTaskContainer>
         <h1>Incomplete</h1>
-        {taskArray
-          .filter((task: TaskType) => task.isCompleted === false)
-          .map((task: TaskType) => (
-            <TaskComponent
-              taskObject={task}
-              toggleCompleted={toggleCompleteStatus}
-              onDelete={deleteTask}
-              onSave={onSave}
-            />
-          ))}
+        {taskArray.map((task: TaskType) => (
+          <TaskComponent
+            taskObject={task}
+            toggleCompleted={toggleCompleteStatus}
+            onDelete={deleteTask}
+            onSave={onSave}
+          />
+        ))}
       </IncompleteTaskContainer>
       <CompletedTaskContainer>
         <h1>Completed</h1>
         {taskArray
           .filter((task: TaskType) => task.isCompleted === true)
           .map((task: TaskType) => (
-            <TaskComponent
-              taskObject={task}
-              toggleCompleted={() => {}}
-              onDelete={() => {}}
-              onSave={() => {}}
-            />
+            <CompletedTask taskObject={task} />
           ))}
       </CompletedTaskContainer>
     </div>
