@@ -5,29 +5,82 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import taskData from './tasksData';
 import { TaskType } from './types';
+import { v4 as uuidv4 } from 'uuid';
 
 const IncompleteTaskContainer = styled.div``;
 const CompletedTaskContainer = styled.div``;
 
-const newTaskTitle: string = 'new Task';
-
 function App() {
   const [taskArray, setTaskArray] = useState<TaskType[]>(taskData);
+  const [newTaskTitle, setNewTaskTitle] = useState<string>('');
 
-  const addTask = (): void => {
-    console.log('add task clicked');
+  /**
+   *
+   * @param newTaskTitle
+   */
+  const addTask = (newTaskTitle: string): void => {
+    const newTask: TaskType = {
+      id: uuidv4(),
+      title: newTaskTitle,
+      isCompleted: false,
+    };
+
+    setTaskArray([...taskArray, newTask]);
+    setNewTaskTitle('');
   };
 
   const deleteTask = (id: string): void => {
-    console.log('delete clicked');
+    setTaskArray(taskArray.filter((task: TaskType) => task.id !== id));
   };
+
+  const toggleCompleteStatus = (id: string) => {
+    setTaskArray(
+      taskArray.map((task: TaskType) =>
+        task.id === id
+          ? {
+              ...task,
+              isCompleted: !task.isCompleted,
+              completedDate: !task.isCompleted
+                ? new Date().getTime()
+                : undefined,
+            }
+          : task
+      )
+    );
+  };
+
+  const onSave = (id: string, newTitle: string): void => {
+    setTaskArray(
+      taskArray.map((task: TaskType) =>
+        task.id === id
+          ? {
+              ...task,
+              title: newTitle,
+            }
+          : task
+      )
+    );
+  };
+
+  // const updateTask
 
   return (
     <div className="App">
       <div>TO DO LIST</div>
       <div>
-        <input type="text" value={newTaskTitle}></input>
-        <div onClick={addTask}>
+        <input
+          type="text"
+          value={newTaskTitle}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setNewTaskTitle(event.currentTarget.value);
+          }}
+          onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+            if (event.key === 'Enter') {
+              addTask(newTaskTitle);
+            }
+          }}
+        ></input>
+        <div onClick={() => addTask(newTaskTitle)}>
           <FontAwesomeIcon icon={faPlus} />
         </div>
       </div>
@@ -36,7 +89,12 @@ function App() {
         {taskArray
           .filter((task: TaskType) => task.isCompleted === false)
           .map((task: TaskType) => (
-            <TaskComponent taskObject={task} />
+            <TaskComponent
+              taskObject={task}
+              toggleCompleted={toggleCompleteStatus}
+              onDelete={deleteTask}
+              onSave={onSave}
+            />
           ))}
       </IncompleteTaskContainer>
       <CompletedTaskContainer>
@@ -44,7 +102,12 @@ function App() {
         {taskArray
           .filter((task: TaskType) => task.isCompleted === true)
           .map((task: TaskType) => (
-            <TaskComponent taskObject={task} />
+            <TaskComponent
+              taskObject={task}
+              toggleCompleted={() => {}}
+              onDelete={() => {}}
+              onSave={() => {}}
+            />
           ))}
       </CompletedTaskContainer>
     </div>
