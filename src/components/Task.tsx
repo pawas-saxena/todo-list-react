@@ -1,9 +1,15 @@
 import React from 'react';
+import { TaskType } from '../types';
 
-const task: React.FC = () => {
+type Prop = {
+  taskObject: TaskType;
+};
+
+const task: React.FC<Prop> = (prop: Prop) => {
   return (
     <div>
       <h1>Task</h1>
+      {JSON.stringify(prop)}
     </div>
   );
 };
