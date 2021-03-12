@@ -1,14 +1,48 @@
 import React, { useState } from 'react';
 import TaskComponent from './components/Task';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlusSquare } from '@fortawesome/free-regular-svg-icons';
 import styled from 'styled-components';
 import taskData from './tasksData';
 import { TaskType } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import CompletedTask from './components/CompletedTask';
+import { FlexColumnDiv, FlexRowDiv, Heading } from './commonStyles';
+import IconButton from './components/IconButton';
 
-const IncompleteTaskContainer = styled.div``;
+const TodoListPageHeader = styled(FlexRowDiv)`
+  font-size: 30px;
+  margin-bottom: 40px;
+  justify-content: center;
+`;
+
+const AppRoot = styled(FlexColumnDiv)`
+  align-items: center;
+  margin: 30px;
+  width: 100%;
+`;
+
+const TodoContainer = styled(FlexColumnDiv)`
+  width: 500px;
+`;
+
+const NewTaskContainer = styled(FlexColumnDiv)``;
+
+const NewTaskInput = styled(FlexRowDiv)`
+  padding: 0px 20px;
+  max-width: 500px;
+  input {
+    flex-basis: auto;
+    border-radius: 3px;
+    margin-right: 10px;
+    height: 30px;
+    width: 97%;
+  }
+`;
+
+const AllTaskListContainer = styled.div`
+  margin-top: 20px;
+`;
 const CompletedTaskContainer = styled.div``;
 
 function App() {
@@ -63,48 +97,52 @@ function App() {
     );
   };
 
-  // const updateTask
-
   return (
-    <div className="App">
-      <div>TO DO LIST</div>
-      <div>
-        <input
-          type="text"
-          value={newTaskTitle}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setNewTaskTitle(event.currentTarget.value);
-          }}
-          onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
-            if (event.key === 'Enter') {
-              addTask(newTaskTitle);
-            }
-          }}
-        ></input>
-        <div onClick={() => addTask(newTaskTitle)}>
-          <FontAwesomeIcon icon={faPlus} />
-        </div>
-      </div>
-      <IncompleteTaskContainer>
-        <h1>Incomplete</h1>
-        {taskArray.map((task: TaskType) => (
-          <TaskComponent
-            taskObject={task}
-            toggleCompleted={toggleCompleteStatus}
-            onDelete={deleteTask}
-            onSave={onSave}
-          />
-        ))}
-      </IncompleteTaskContainer>
-      <CompletedTaskContainer>
-        <h1>Completed</h1>
-        {taskArray
-          .filter((task: TaskType) => task.isCompleted === true)
-          .map((task: TaskType) => (
-            <CompletedTask taskObject={task} />
+    <AppRoot>
+      <TodoContainer>
+        <TodoListPageHeader>TO DO LIST</TodoListPageHeader>
+        <NewTaskContainer>
+          <Heading>Add Item</Heading>
+          <NewTaskInput>
+            <input
+              type="text"
+              value={newTaskTitle}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setNewTaskTitle(event.currentTarget.value);
+              }}
+              onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+                if (event.key === 'Enter') {
+                  addTask(newTaskTitle);
+                }
+              }}
+            ></input>
+            <IconButton
+              onClick={() => addTask(newTaskTitle)}
+              icon={<FontAwesomeIcon icon={faPlusSquare} size="2x" />}
+            />
+          </NewTaskInput>
+        </NewTaskContainer>
+        <AllTaskListContainer>
+          <Heading>List</Heading>
+          {taskArray.map((task: TaskType) => (
+            <TaskComponent
+              taskObject={task}
+              toggleCompleted={toggleCompleteStatus}
+              onDelete={deleteTask}
+              onSave={onSave}
+            />
           ))}
-      </CompletedTaskContainer>
-    </div>
+        </AllTaskListContainer>
+        <CompletedTaskContainer>
+          <Heading>Completed</Heading>
+          {taskArray
+            .filter((task: TaskType) => task.isCompleted === true)
+            .map((task: TaskType) => (
+              <CompletedTask taskObject={task} />
+            ))}
+        </CompletedTaskContainer>
+      </TodoContainer>
+    </AppRoot>
   );
 }
 

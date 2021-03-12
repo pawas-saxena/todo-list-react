@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { TaskType } from '../types';
 import styled from 'styled-components';
+import { FlexRowDiv, TaskTitle } from '../commonStyles';
+import IconButton from './IconButton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes, faPen, faSave } from '@fortawesome/free-solid-svg-icons';
 
 type Prop = {
   taskObject: TaskType;
@@ -9,14 +13,29 @@ type Prop = {
   onSave: (id: string, title: string) => void;
 };
 
-const ReadOnlyTaskContainer = styled.div`
-  p {
-    text-decoration: ${(props: { isCompleted: boolean }) =>
-      props.isCompleted ? 'line-through' : ''};
-  }
+const TaskTitleWithStrikeThrough = styled(TaskTitle)`
+  text-decoration: ${(props: { isCompleted: boolean }) =>
+    props.isCompleted ? 'line-through' : ''};
 `;
 
-const EditableTaskContainer = styled.div``;
+const TaskRowRoot = styled(FlexRowDiv)`
+  align-items: center;
+  border-bottom: 1px solid grey;
+  padding-bottom: 5px;
+  margin: 5px 20px;
+  flex-basis: auto;
+  input[type='checkbox'] {
+    width: 5%;
+    cursor: pointer;
+  }
+  input[type='text'] {
+    width: 90%;
+    border-radius: 3px;
+  }
+  ${TaskTitle} {
+    width: 90%;
+  }
+`;
 
 const Task: React.FC<Prop> = ({
   taskObject,
@@ -27,7 +46,7 @@ const Task: React.FC<Prop> = ({
   const [isEditable, setIsEditable] = useState<boolean>(false);
   const [taskTitle, setTaskTitle] = useState<string>('');
   return (
-    <div>
+    <TaskRowRoot>
       <input
         type="checkbox"
         onChange={() => {
@@ -37,7 +56,7 @@ const Task: React.FC<Prop> = ({
         checked={taskObject.isCompleted}
       />
       {isEditable ? (
-        <EditableTaskContainer>
+        <>
           <input
             type="text"
             value={taskTitle}
@@ -50,30 +69,31 @@ const Task: React.FC<Prop> = ({
               }
             }}
           />
-          <div
+          <IconButton
             onClick={() => {
               onSave(taskObject.id, taskTitle);
               setIsEditable(false);
             }}
-          >
-            save
-          </div>
-        </EditableTaskContainer>
+            icon={<FontAwesomeIcon icon={faSave} size="1x" />}
+          />
+        </>
       ) : (
-        <ReadOnlyTaskContainer isCompleted={taskObject.isCompleted}>
-          <p>{taskObject.title}</p>
-          <div onClick={() => onDelete(taskObject.id)}>x</div>
-          <div
+        <>
+          <TaskTitleWithStrikeThrough isCompleted={taskObject.isCompleted}>{taskObject.title}</TaskTitleWithStrikeThrough>
+          <IconButton
+            onClick={() => onDelete(taskObject.id)}
+            icon={<FontAwesomeIcon icon={faTimes} size="1x" />}
+          />
+          <IconButton
             onClick={() => {
               setTaskTitle(taskObject.title);
               setIsEditable(true);
             }}
-          >
-            edit
-          </div>
-        </ReadOnlyTaskContainer>
+            icon={<FontAwesomeIcon icon={faPen} size="1x" />}
+          />
+        </>
       )}
-    </div>
+    </TaskRowRoot>
   );
 };
 
