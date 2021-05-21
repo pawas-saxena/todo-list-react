@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import CompletedTask from './components/CompletedTask';
 import { FlexColumnDiv, FlexRowDiv, Heading } from './commonStyles';
 import IconButton from './components/IconButton';
+import Flash from './components/Flash';
 
 const TodoListPageHeader = styled(FlexRowDiv)`
   font-size: 30px;
@@ -143,6 +144,7 @@ function App() {
             ))}
         </CompletedTaskContainer>
       </TodoContainer>
+      <Flash></Flash>
     </AppRoot>
   );
 }
